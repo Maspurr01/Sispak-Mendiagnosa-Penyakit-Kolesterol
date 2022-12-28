@@ -1,0 +1,399 @@
+<html>
+    <head>
+        <title>Sispak</title>
+        <meta charset="UTF-8">
+        <meta name="description" content="Situs untuk mendiagnosa kemungkinan penyakit Kolestrol pada Remaja.">
+        <link rel="shortcut icon" href="assets/img/sispak.png" type="image/x-icon">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <meta name="theme-color" content="#f8f9fa">
+
+        <link rel="manifest" href="manifest.json">
+
+        <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.1.1/css/all.css" integrity="sha384-O8whS3fhG2OnA5Kas0Y9l3cfpmYjapjI0E4theH4iuMD+pLhbf6JI0jIMfYcK3yZ" crossorigin="anonymous">
+
+        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap.min.css">
+        <link rel="stylesheet" href="assets/css/animate.css">
+        <link rel="stylesheet" type="text/css" href="assets/css/bootstrap-vue.css">
+
+
+        <!-- development version, includes helpful console warnings -->
+        <script src="assets/js/vue.js"></script>
+        <script src="assets/js/polyfill.min.js"></script>
+        <script src="assets/js/bootstrap-vue.js"></script>
+
+        <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+        <script type="text/javascript" src="assets/js/popper.min.js"></script>
+        <script type="text/javascript" src="assets/js/bootstrap.min.js"></script>
+        <script src="assets/js/sweetalert.min.js"></script>
+    </head>
+    <body>
+        <div id="app">
+            <!-- Image and text -->
+            <nav class="navbar navbar-light fixed-top" style="background-color: #f1f1f1;">
+              <a class="navbar-brand font-weight-bold" v-on:click="goHome">
+                <img src="assets/img/sispak.png" width="30" height="30" class="d-inline-block align-top" alt="logo">
+                Mendiagnosa Penyakit Kolesterol Pada Remaja 
+              </a>
+            </nav>
+
+            <div class="card" >
+                <img src="assets/img/kolesterol.png" height="200"style="margin-top: 35px;" alt="...">
+            </div>
+            <div class="container animated fadeIn" style="margin-top: 20px; margin-bottom: 100px" v-if="home">
+                <div class="row mt-3">
+                    <div class="col-12 col-lg-12">
+                        <div class="alert alert-success alert-dismissible animated-1s fadeInDown" role="alert" id="intro" v-if='submited'>
+                            Aplikasi sistem pakar ini akan mendiagnosa penyakit kolestrol pada remaja dengan metode <i>Certainty Factor (CF)</i>. <b>Segera input nama Anda dan klik tombol mulai!</b><!--  <i class="fas fa-heart" style="color: salmon"></i> -->
+                            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row mt-2 mb-3">
+                    <div class="col-12 col-lg-4">
+                        <h3>Halo {{ name }}!</h3>
+                    </div>                
+                </div>
+
+                <div class="row my-3" v-if='submited'>
+                    <div class="col-12 col-lg-4 col-md-4">
+                        <div class="input-group">
+                            <input type="text" class="form-control" v-model="name" placeholder="Input your name!">
+                            <div class="input-group-append">
+                                <button class="btn btn-success" v-on:click="inputName" type="submit">Mulai</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row my-3 animamted fadeInUp" v-if='mulai'>
+                    <div class="col-12 col-lg-12 col-sm-12">
+                        <div class="card">
+                            <div class="card-header">
+                                Silahkan Pilih Sesuai Dengan Gejala Yang Anda Rasakan!
+                            </div>
+
+                            <div class="card-body" v-if='visible[0]'>
+                                <h5 class="card-title animated fadeIn text-left">Apakah Anda mengalami sakit kepala pegal dikepala?</h5>
+                                <div class="row animated shake">
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(0, 1)' class="btn btn-outline-success btn-block my-1">Sangat Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(0, 0.8)' class="btn btn-outline-success btn-block my-1">Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(0, 0.6)' class="btn btn-outline-success btn-block my-1">Cukup Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(0, 0.4)' class="btn btn-outline-success my-1 btn-block">Sedikit</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(0, 0.2)' class="btn btn-outline-success my-1 btn-block">Tidak Tahu</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(0, 0)' class="btn btn-outline-success my-1 btn-block">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body text-left" v-if='visible[1]'>
+                                <h5 class="card-title animated bounceIn">Apakah Anda mengalami pegal sampai ke pundak?</h5>
+                                
+                                <div class="row animated shake">
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(1, 1)' class="btn btn-outline-success btn-block my-1">Sangat Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(1, 0.8)' class="btn btn-outline-success btn-block my-1">Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(1, 0.6)' class="btn btn-outline-success btn-block my-1">Cukup Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(1, 0.4)' class="btn btn-outline-success my-1 btn-block">Sedikit</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(1, 0.2)' class="btn btn-outline-success my-1 btn-block">Tidak Tahu</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(1, 0)' class="btn btn-outline-success my-1 btn-block">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body text-left" v-if='visible[2]'>
+                                <h5 class="card-title animated bounceIn">Apakah Anda gampang mengantuk?</h5>
+
+                                <div class="row animated shake">
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(2, 1)' class="btn btn-outline-success btn-block my-1">Sangat Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(2, 0.8)' class="btn btn-outline-success btn-block my-1">Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(2, 0.6)' class="btn btn-outline-success btn-block my-1">Cukup Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(2, 0.4)' class="btn btn-outline-success my-1 btn-block">Sedikit</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(2, 0.2)' class="btn btn-outline-success my-1 btn-block">Tidak Tahu</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(2, 0)' class="btn btn-outline-success my-1 btn-block">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body text-left" v-if='visible[3]'>
+                                <h5 class="card-title animated bounceIn">Apakah Anda mengalami kaki bengkak?</h5>
+
+                                <div class="row animated shake">
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(3, 1)' class="btn btn-outline-success btn-block my-1">Sangat Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(3, 0.8)' class="btn btn-outline-success btn-block my-1">Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(3, 0.6)' class="btn btn-outline-success btn-block my-1">Cukup Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(3, 0.4)' class="btn btn-outline-success my-1 btn-block">Sedikit</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(3, 0.2)' class="btn btn-outline-success my-1 btn-block">Tidak Tahu</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(3, 0)' class="btn btn-outline-success my-1 btn-block">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body text-left" v-if='visible[4]'>
+                                <h5 class="card-title animated bounceIn">Apakah Anda mengalami perasaan mudah capek?</h5>
+
+                                <div class="row animated shake">
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(4, 1)' class="btn btn-outline-success btn-block my-1">Sangat Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(4, 0.8)' class="btn btn-outline-success btn-block my-1">Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(4, 0.6)' class="btn btn-outline-success btn-block my-1">Cukup Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(4, 0.4)' class="btn btn-outline-success my-1 btn-block">Sedikit</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(4, 0.2)' class="btn btn-outline-success my-1 btn-block">Tidak Tahu</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(4, 0)' class="btn btn-outline-success my-1 btn-block">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card-body text-left" v-if='visible[5]'>
+                                <h5 class="card-title animated bounceIn">Apakah kadar kolestrol anda diatas 120-240 Mg/dl?</h5>
+
+                                <div class="row animated shake">
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(5, 1)' class="btn btn-outline-success btn-block my-1">Sangat Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(5, 0.8)' class="btn btn-outline-success btn-block my-1">Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(5, 0.6)' class="btn btn-outline-success btn-block my-1">Cukup Yakin</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(5, 0.4)' class="btn btn-outline-success my-1 btn-block">Sedikit</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(5, 0.2)' class="btn btn-outline-success my-1 btn-block">Tidak Tahu</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button v-on:click='inputWeight(5, 0)' class="btn btn-outline-success my-1 btn-block">Tidak</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+                <!-- Row end -->
+
+                <div class="row mt-2" v-if='selesai'>
+                    <div class="col-12">
+                        <div class="alert alert-success animated bounceIn" role="alert">
+                            <h4 class="alert-heading">Berikut diagnosa Anda:</h4>
+                            <p v-if='cfCombine <= 99'>Dari gejala-gejala yang Anda rasakan, sistem mendiagnosa Anda memiliki <b>{{ diagnostic }}</b> terserang penyakit Kolesterol dengan persentase <b>{{ cfCombine }}%</b>.</p>
+                            <p v-if='cfCombine > 99'>Dari gejala-gejala yang Anda rasakan, sistem <b>{{ diagnostic }}</b> bahwa Anda terserang penyakit Kolestrol dengan persentase <b>{{ cfCombine }}%</b>.</p>
+                        </div>
+                    </div>
+
+                    <div class="col-12">
+                        <div class="alert alert-info text-justify animated bounceIn delay-1s" role="alert" v-if="cfCombine < 20">
+                            <p>Pertahankan kesehatan Anda, makanlah makanan sehat dan bergizi, rajinlah berolahraga, dan jangan lupa bahagia :)</p>
+                        </div>
+                        <div class="alert alert-warning text-justify animated bounceIn delay-1s" role="alert" v-if='cfCombine >= 20 && cfCombine <= 99'>
+                            <p>Perlu diperhatikan Anda harus konsultasi kepada dokter Anda untuk pemeriksaan lebih lanjut.</p>
+                        </div>
+                        <div class="alert alert-danger text-justify animated bounceIn delay-1s" role="alert" v-if='cfCombine > 99'>
+                            <p>Segeralah periksakan kesehatan Anda ke dokter agar Anda mendapatkan penanganan medis secepat mungkin.</p>
+                        </div>
+
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 59 && cfCombine <= 60">
+                            <p>Anda menderita penyakit Kolestrol Baik (HDL)</p>
+                        </div>
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 58 && cfCombine <= 59">
+                            <p>Anda menderita penyakit Kolestrol Jahat (LDL)</p>
+                        </div>
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 54 && cfCombine <= 55">
+                            <p>Anda menderita penyakit Kolestrol Baik (HDL)</p>
+                        </div>
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 43 && cfCombine <= 44">
+                            <p>Anda menderita penyakit Kolestrol Baik (HDL)</p>
+                        </div>
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 62 && cfCombine <= 63">
+                            <p>Anda menderita penyakit Kolestrol Jahat (LDL)</p>
+                        </div>
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 42 && cfCombine <= 43">
+                            <p>Anda menderita penyakit Kolestrol Jahat (LDL)</p>
+                        </div>
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 65 && cfCombine <= 66">
+                            <p>Anda menderita penyakit Kolestrol Jahat (LDL)</p>
+                        </div>
+                        <div class="alert alert-info text-justify animated bounceIn delay-2s" role="alert" v-if="cfCombine >= 52 && cfCombine <= 53">
+                            <p>Anda menderita penyakit Kolestrol Baik (HDL)</p>
+                        </div>
+                        
+                    </div>
+                    <div class="col-12">
+                        <button class="btn btn-success animated bounceIn delay-2s" v-on:click='init'>Ulangi</button>
+                    </div>
+                </div>
+            </div>
+            <!-- Container (APP) end -->
+
+            <div class="container animated-1s fadeIn" style="margin-bottom: 100px; margin-top: 70px" v-if='info'>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header text-center font-weight-bold fs-1 bg-success text-light">
+                                <h3>Kolesterol</h3>
+                            </div>
+                            <div class="card-body">
+                                <p>Kolesterol adalah salah satu komponen lemak dalam darah yang dibutuhkan tubuh untuk membantu memproduksi sel-sel baru dan hormon.</p>
+                                <p>Secara umum, ada 2 jenis kolesterol, yakni :
+                                    <ul>
+                                        <li>Kolesterol Baik (High-Density Lipoprotein atau HDL)</li>
+                                        <li>Kolestrol Jahat (Low-Density Lipoprotein atau LDL)</li>
+                                    </ul>                                    
+                                </p>
+                                <div class="img-with-text w-100">
+                                    <img src="gambar uas pakar/Foto-3-kolestrol-B-J.jpg" alt="Kolestrol" class="img-fluid rounded w-300">
+                                    <p>Gambar berikut menunjukkan kolesterol yang terdapat pada sel darah. Meskipun penting bagi tubuh, namun kolesterol yang kadarnya terlalu tinggi dapat mengganggu kesehatan dan jika tidak ditangani dengan tepat penumpukan lemak yang diakibatkan tingginya kadar kolesterol dalam darah dapat pecah dan mengakibatkan kondisi yang lebih serius. <br> <a href="https://www.alodokter.com/kolesterol">referensi</a> </p>
+                                </div>
+                                <p>HDL adalah kolesterol yang berfungsi untuk membersihkan kelebihan kolesterol yang berbahaya di dalam darah dan membawanya kembali ke hati untuk dikeluarkan dari tubuh. Oleh karena itu, HDL (high-density lipoprotein) disebut sebagai kolesterol baik.</p>
+                                <p>LDL disebut kolesterol jahat karena ketika kadarnya terlalu tinggi, kolesterol ini bisa menyebabkan pembentukan plak yang menyumbat dinding pembuluh darah (aterosklerosis). Hal ini kemudian bisa meningkatkan risiko terjadinya penyakit jantung dan stroke.</p>
+
+                                <div class="img-with-text w-100">
+                                    <img src="https://pojokbatam.id/wp-content/uploads/2020/08/Kolesterol2.jpg" alt="Kolestrol Baik dan Jahat" class="img-fluid rounded w-300">
+                                    </p>
+                                </div>
+                            </div>
+
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item">
+                                        <h5 class="text-info">Tips Pola Hidup Sehat</h5>
+                                        <p>Adapun beberapa pola hidup sehat yang dapat diterapkan oleh penderita kolesterol adalah sebagai berikut :
+                                            <img src="assets/img/pola hidup.jpeg" height="200"style="margin-top: 35px; margin-left: 350px;" alt="...">
+
+                                        </p>
+                                    <table>
+                                        <tr>
+                                            <td>1. Istirahat yang Cukup <br>
+                                                <p>Perlu kamu ketahui bahwa istirahat yang cukup sangat beperan penting untuk kesehatan tubuh. Karena jika tubuh disibukan dengan banyak aktivitas setiap harinya dan kurang beristirahat,  maka tubuh akan rentan terkena penyakit. Dengan istirahat yang cukup setiap harinya maka kamu sudah melakukan cara menjaga gaya hidup sehat dengan baik.</p></td>
+                                            
+                                        </tr>
+                                        <tr>
+                                            <td>2. Memperhatikan Asupan Makanan <br>
+                                            <p>Untuk cara menjaga gaya hidup sehat, kamu perlu mengatur makanan apa saja yang akan dikonsumsi setiap harinya. Contohnya berbagai macam zat gizi yang dibutuhkan oleh manusia adalah karbohidrat, protein, vitamin dan juga mineral. Selain itu kamu juga harus menghindari makanan berlemak tinggi. Makanan berlemak dapat menyebabkan penimbunan kolesterol dalam pembuluh darah. Hal ini bisa memicu berbagai macam penyakit kronis.</p></td>
+                                        </tr>
+                                        <tr>
+                                            <td>3. Minum Air Putih <br>
+                                                <p>Minum air putih merupakan salah satu cara hidup sehat yang mudah. Karena dengan meminum air putih, bisa mengeluarkan racun yang ada di dalam tubuh, yang dikeluarkan melalui air seni. Tubuh sangat membutuhkan unsur cairan karena banyaknya aktivitas setiap hari sehingga kamu sangat dianjurkan untuk minum minimal setidaknya 8 gelas per hari.</p></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>4. Rajin Berolahraga <br>
+                                                <p>Meluangkan waktu untuk berolahraga merupakan salah satu cara menjalani gaya hidup sehat. Karena olahraga membuat tubuh menjadi lebih fit dan bugar. Berolahraga dapat mengeluarkan racun dalam tubuh, yang dikeluarkan melalui keringat. Menjaga gaya hidup sehat tidak lengkap jika tidak berolahraga.</p></td>
+                                        </tr>
+
+                                        <tr>
+                                            <td>5. Membiasakan Hidup Bersih <br>
+                                                <p>Menjaga kebersihan termasuk cara hidup sehat. Selain untuk kenyamanan dan kesehatan, kebersihan juga membuat suasana hati yang baik saat untuk kamu memulai beraktivitas. Tidak lupa juga untuk memperhatikan kebersihan tangan dengan rajin mencuci tangan. Karena dalam beraktivitas sehari-hari pastinya kamu memegang banyak benda atau barang-barang yang tidak diketahui kebersihannya.</p></td>
+                                        </tr>
+                                    </table>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="container" style="margin-top: 70px; margin-bottom: 100px" v-if='about'>
+                <!-- Container About -->
+                <div class="row animated fadeIn">
+                    <div class="col-12 offset-lg-1 col-lg-10">
+                        <div class="card">
+                            <div class="card-header text-center font-weight-bold fs-1 bg-success text-light">
+                                About
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title text-center">Sistem Pakar Mendiagnosa Penyakit Kolesterol Pada Remaja <br> Universitas Cokroaminoto Palopo</h5>
+                                <p class="text-center">Dibuat untuk memenuhi tugas akhir mata kuliah sistem pakar semester 5 oleh mahasiswa Fakultas Teknik Komputer Universitas Cokroaminoto Palopo angkatan 2020.</p>
+                                <div class="row text-center">
+                                    <div class="col-lg-4 col-md-4"><a href="https://www.instagram.com/puriii_i/" target="_blank">Puri</a></div>
+                                    <div class="col-lg-4 col-md-4"><a href="https://www.instagram.com/anisyafitramaharanii/" target="_blank">Anisya Fitra Maharani</a></div>
+                                    <div class="col-lg-4 col-md-4"><a href="https://www.instagram.com/ekaburhan_/" target="_blank">Eka Burhan</a></div>
+                                </div>
+                                <hr>
+                                <p class="text-center">&lt;/&gt; with <i class="fas fa-heart" style="color: salmon"></i> @ <a href="http://uncp.ac.id/">UNCP</a></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Container about end -->
+            </div>
+
+            <nav class="navbar fixed-bottom navbar-expand-sm navbar-dark bg-dark">
+                <a class="navbar-brand text-white d-lg-none">Menu</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarCollapse">
+                    <ul class="navbar-nav mr-auto">
+                        <li class="nav-item active" v-on:click="goHome" id="homeButton">
+                            <span class="nav-link" style="cursor: pointer;"><i class="fas fa-stethoscope mr-auto"></i> Diagnostic <span class="sr-only">(current)</span></span>
+                        </li>
+                        <li class="nav-item" v-on:click="goInfo" id="infoButton">
+                            <span class="nav-link" style="cursor: pointer;"><i class="fas fa-atlas mr-auto"></i> Info</span>
+                        </li>
+                        <li class="nav-item" v-on:click="goAbout" id="aboutButton">
+                            <span class="nav-link" style="cursor: pointer;"><i class="fas fa-lightbulb mr-2"></i>About</span>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </body>
+    <script type="text/javascript" src="assets/js/script.js"></script>
+</html>
